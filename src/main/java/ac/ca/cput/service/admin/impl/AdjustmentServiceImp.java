@@ -4,10 +4,15 @@ import ac.ca.cput.Repository.admin.AdjustmentRepository;
 import ac.ca.cput.Repository.admin.impl.AdjustmentRepositoryImp;
 import ac.ca.cput.model.admin.Adjustment;
 import ac.ca.cput.service.admin.AdjustmentService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
 
 import java.util.Set;
-
+@Service("AdjustmentServiceImp")
 public class AdjustmentServiceImp implements AdjustmentService {
+@Autowired
+@Qualifier("InMemory")
     private static AdjustmentServiceImp service = null;
     private AdjustmentRepository repo;
 
