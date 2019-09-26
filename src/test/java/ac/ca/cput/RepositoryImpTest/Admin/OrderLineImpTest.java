@@ -62,7 +62,7 @@ public class OrderLineImpTest {
         System.out.println("In update, about_to_updated = " + orderLine);
         OrderLine updated = this.repository.update(orderLine);
         System.out.println("In update, updated = " + updated);
-        Assert.assertSame(newname, updated.getQuantity());
+        Assert.assertSame(newname, "New Test quantity");
         d_getAll();
     }
 

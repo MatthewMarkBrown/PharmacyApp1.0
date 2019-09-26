@@ -1,17 +1,24 @@
 package ac.ca.cput.Repository.admin.impl;
 
-import ac.ca.cput.Repository.admin.PaymentRepository;
-import ac.ca.cput.model.admin.Payment;
+
+import ac.ca.cput.Repository.admin.*;
+import ac.ca.cput.Repository.people.CustomerRepository;
+import ac.ca.cput.model.admin.*;
+import ac.ca.cput.model.people.Customer;
+import org.springframework.stereotype.Repository;
+import sun.awt.SunHints;
 
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+@Repository("PaymentInMemory")
 public class PaymentRepositoryImp implements PaymentRepository {
     private static PaymentRepositoryImp repo = null;
     private Set<Payment> pay;
 
     private PaymentRepositoryImp(){
+
         this.pay = new HashSet<>();
     }
 
@@ -24,33 +31,36 @@ public class PaymentRepositoryImp implements PaymentRepository {
 
     @Override
     public Payment create(Payment payment) {
-       this.pay.add(payment);
-       return payment;
+        this.pay.add(payment);
+        return payment;
     }
 
+    @Override
     public Payment update(Payment payment) {
-        if(!payment.equals(null)){
+        Payment inDB = read(payment.getPaymentId());
+
+        if(inDB != null){
+            pay.remove(inDB);
+            pay.add(payment);
             return payment;
         }
         return null;
     }
 
+
     @Override
-    public void delete(String t) {
-        for(Iterator<Payment> ite = pay.iterator(); ite.hasNext(); ){
-            Payment p = ite.next();
-            if (p.equals(new Payment.Builder().paymentId(t))){
-                this.pay.remove(p);
-            }
-        }
+    public void delete(String id) {
+        Payment inDB = read(id);
+        pay.remove(inDB);
     }
 
     @Override
     public Payment read(String id) {
-        return null;
+        return pay.stream().filter( pay-> pay.getPaymentId().equals(id)).findAny().orElse(null);
     }
+
     @Override
-    public Set <Payment> getAll(){
+    public Set<Payment> getAll(){
         return this.pay;
     }
 }

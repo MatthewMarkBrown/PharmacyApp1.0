@@ -63,7 +63,7 @@ public class PaymentImpTest {
         System.out.println("In update, about_to_updated = " + payment);
         Payment updated = this.repository.update(payment);
         System.out.println("In update, updated = " + updated);
-        Assert.assertSame(newname, updated.getPaymentId());
+        Assert.assertSame(newname,  "New Test Payment ID" );
         d_getAll();
     }
 

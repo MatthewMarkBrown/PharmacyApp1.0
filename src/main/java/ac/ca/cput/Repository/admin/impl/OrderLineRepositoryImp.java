@@ -1,18 +1,25 @@
 package ac.ca.cput.Repository.admin.impl;
 
-import ac.ca.cput.Repository.admin.OrderLineRepository;
-import ac.ca.cput.model.admin.OrderLine;
+
+import ac.ca.cput.Repository.admin.*;
+import ac.ca.cput.Repository.people.CustomerRepository;
+import ac.ca.cput.model.admin.*;
+import ac.ca.cput.model.people.Customer;
+import org.springframework.stereotype.Repository;
+import sun.awt.SunHints;
 
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+@Repository("OrderLineInMemory")
 public class OrderLineRepositoryImp implements OrderLineRepository {
     private static OrderLineRepositoryImp repo = null;
-    private Set<OrderLine> orderLine;
+    private Set<OrderLine> ord;
 
     private OrderLineRepositoryImp(){
-        this.orderLine = new HashSet<>();
+
+        this.ord = new HashSet<>();
     }
 
     public static OrderLineRepositoryImp getRepo(){
@@ -23,36 +30,37 @@ public class OrderLineRepositoryImp implements OrderLineRepository {
     }
 
     @Override
-    public Set<OrderLine> getAll() {
-        return this.orderLine;
-    }
-
-    @Override
     public OrderLine create(OrderLine orderLine) {
-        this.orderLine.add(orderLine);
+        this.ord.add(orderLine);
         return orderLine;
     }
 
     @Override
     public OrderLine update(OrderLine orderLine) {
-        if (!orderLine.equals(null)) {
+        OrderLine inDB = read(orderLine.getQuantity());
+
+        if(inDB != null){
+            ord.remove(inDB);
+            ord.add(orderLine);
             return orderLine;
         }
-        return orderLine;
+        return null;
     }
 
+
     @Override
-    public void delete(String t) {
-        for(Iterator<OrderLine> ite = orderLine.iterator(); ite.hasNext(); ){
-            OrderLine ol = ite.next();
-            if (ol.equals(new OrderLine.Builder().quantity(t))){
-                this.orderLine.remove(ol);
-            }
-        }
+    public void delete(String id) {
+        OrderLine inDB = read(id);
+        ord.remove(inDB);
     }
 
     @Override
     public OrderLine read(String id) {
-        return null;
+        return ord.stream().filter( ord-> ord.getQuantity().equals(id)).findAny().orElse(null);
+    }
+
+    @Override
+    public Set <OrderLine> getAll(){
+        return this.ord;
     }
 }

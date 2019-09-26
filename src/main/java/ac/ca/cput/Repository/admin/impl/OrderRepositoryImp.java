@@ -1,17 +1,24 @@
 package ac.ca.cput.Repository.admin.impl;
 
-import ac.ca.cput.Repository.admin.OrderRepository;
-import ac.ca.cput.model.admin.Order;
+
+import ac.ca.cput.Repository.admin.*;
+import ac.ca.cput.Repository.people.CustomerRepository;
+import ac.ca.cput.model.admin.*;
+import ac.ca.cput.model.people.Customer;
+import org.springframework.stereotype.Repository;
+import sun.awt.SunHints;
 
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+@Repository("OrderInMemory")
 public class OrderRepositoryImp implements OrderRepository {
     private static OrderRepositoryImp repo = null;
     private Set<Order> ord;
 
     private OrderRepositoryImp(){
+
         this.ord = new HashSet<>();
     }
 
@@ -23,11 +30,6 @@ public class OrderRepositoryImp implements OrderRepository {
     }
 
     @Override
-    public Set<Order> getAll() {
-        return this.ord;
-    }
-
-    @Override
     public Order create(Order order) {
         this.ord.add(order);
         return order;
@@ -35,44 +37,30 @@ public class OrderRepositoryImp implements OrderRepository {
 
     @Override
     public Order update(Order order) {
-            if(!order.equals(null)){
-                return order;
-            }
-            return null;
-    }
+        Order inDB = read(order.getOrderId());
 
-    @Override
-    public void delete(String t) {
-        for(Iterator<Order> ite = ord.iterator(); ite.hasNext(); ){
-            Order or = ite.next();
-            if (or.equals(new Order.Builder().orderId(t))){
-                this.ord.remove(or);
-            }
+        if(inDB != null){
+            ord.remove(inDB);
+            ord.add(order);
+            return order;
         }
-
-    }
-
-    @Override
-    public Order read(String id) {
         return null;
     }
 
 
-    /*
-
-
-
-    public void delete(String s) {
-        for(Iterator<Order> ite = ord.iterator(); ite.hasNext(); ){
-            Order or = ite.next();
-            if (or.equals(new Order.Builder().orderId(s))){
-                this.ord.remove(or);
-            }
-        }
+    @Override
+    public void delete(String id) {
+        Order inDB = read(id);
+        ord.remove(inDB);
     }
 
+    @Override
+    public Order read(String id) {
+        return ord.stream().filter( ord-> ord.getOrderId().equals(id)).findAny().orElse(null);
+    }
+
+    @Override
     public Set <Order> getAll(){
         return this.ord;
     }
-    */
 }

@@ -1,18 +1,25 @@
 package ac.ca.cput.Repository.admin.impl;
 
 import ac.ca.cput.Repository.admin.PharmacyRepository;
+import ac.ca.cput.Repository.people.CustomerRepository;
+import ac.ca.cput.Repository.people.PharmacyClerkRepository;
 import ac.ca.cput.model.admin.Pharmacy;
+import ac.ca.cput.model.people.Customer;
+import ac.ca.cput.model.people.PharmacyClerk;
+import org.springframework.stereotype.Repository;
 
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+@Repository("PharmacyInMemory")
 public class PharmacyRepositoryImp implements PharmacyRepository {
     private static PharmacyRepositoryImp repo = null;
-    private Set<Pharmacy> pharm;
+    private Set<Pharmacy> pharmC;
 
     private PharmacyRepositoryImp(){
-        this.pharm = new HashSet<>();
+
+        this.pharmC = new HashSet<>();
     }
 
     public static PharmacyRepositoryImp getRepo(){
@@ -22,39 +29,38 @@ public class PharmacyRepositoryImp implements PharmacyRepository {
         return repo;
     }
 
-@Override
+    @Override
     public Pharmacy create(Pharmacy pharmacy) {
-       this.pharm.add(pharmacy);
-       return pharmacy;
+        this.pharmC.add(pharmacy);
+        return pharmacy;
     }
 
-
     @Override
-
     public Pharmacy update(Pharmacy pharmacy) {
-        if(!pharmacy.equals(null)){
+        Pharmacy inDB = read(pharmacy.getPharmacyId());
+
+        if(inDB != null){
+            pharmC.remove(inDB);
+            pharmC.add(pharmacy);
             return pharmacy;
         }
         return null;
     }
 
+
     @Override
-    public void delete(String s) {
-        for(Iterator<Pharmacy> ite = pharm.iterator(); ite.hasNext(); ){
-            Pharmacy p = ite.next();
-            if (p.equals(new Pharmacy.Builder().pharmacyId(s))){
-                this.pharm.remove(p);
-            }
-        }
+    public void delete(String id) {
+        Pharmacy inDB = read(id);
+        pharmC.remove(inDB);
     }
 
     @Override
     public Pharmacy read(String id) {
-        return null;
+        return pharmC.stream().filter( pharmC -> pharmC.equals(id)).findAny().orElse(null);
     }
 
     @Override
     public Set <Pharmacy> getAll(){
-        return this.pharm;
+        return this.pharmC;
     }
 }

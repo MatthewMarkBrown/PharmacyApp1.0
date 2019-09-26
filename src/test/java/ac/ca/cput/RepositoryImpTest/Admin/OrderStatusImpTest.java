@@ -65,7 +65,7 @@ public class OrderStatusImpTest {
         System.out.println("In update, about_to_updated = " + orderStatus);
         OrderStatus updated = this.repository.update(orderStatus);
         System.out.println("In update, updated = " + updated);
-        Assert.assertSame(newname, updated.getStatusId());
+        Assert.assertSame(newname, "New Test StatusID");
         d_getAll();
     }
 

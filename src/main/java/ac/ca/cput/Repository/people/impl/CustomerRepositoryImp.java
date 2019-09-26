@@ -2,16 +2,19 @@ package ac.ca.cput.Repository.people.impl;
 
 import ac.ca.cput.Repository.people.CustomerRepository;
 import ac.ca.cput.model.people.Customer;
+import org.springframework.stereotype.Repository;
 
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+@Repository("CustomerInMemory")
 public class CustomerRepositoryImp implements CustomerRepository {
     private static CustomerRepositoryImp repo = null;
     private Set<Customer> cust;
 
     private CustomerRepositoryImp(){
+
         this.cust = new HashSet<>();
     }
 
@@ -30,7 +33,11 @@ public class CustomerRepositoryImp implements CustomerRepository {
 
     @Override
     public Customer update(Customer customer) {
-        if(!customer.equals(null)){
+        Customer inDB = read(customer.getCustId());
+
+        if(inDB != null){
+            cust.remove(inDB);
+            cust.add(customer);
             return customer;
         }
         return null;
@@ -38,18 +45,14 @@ public class CustomerRepositoryImp implements CustomerRepository {
 
 
     @Override
-    public void delete(String s) {
-        for(Iterator<Customer> ite = cust.iterator(); ite.hasNext(); ){
-            Customer c = ite.next();
-            if (c.equals(new Customer.Builder().custId(s))){
-                this.cust.remove(c);
-            }
-        }
+    public void delete(String id) {
+        Customer inDB = read(id);
+        cust.remove(inDB);
     }
 
     @Override
     public Customer read(String id) {
-        return null;
+        return cust.stream().filter( cust -> cust.getCustId().equals(id)).findAny().orElse(null);
     }
 
     @Override
