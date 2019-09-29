@@ -1,47 +1,66 @@
-//package ac.ca.cput.service.admin.impl;
-//
-//import ac.ca.cput.Repository.admin.ShipmentRepository;
-//import ac.ca.cput.Repository.admin.impl.ShipmentRepositoryImp;
-//import ac.ca.cput.model.admin.Shipment;
-//import ac.ca.cput.service.admin.ShipmentService;
-//
-//import java.util.Set;
-//
-//public class ShipmentServiceImp implements ShipmentService {
-//    private static ShipmentServiceImp service = null;
-//    private ShipmentRepository repo;
-//
-//    private ShipmentServiceImp() {
-//        this.repo = (ShipmentRepository) ShipmentRepositoryImp.getRepo();
-//    }
-//
-//    public static ShipmentServiceImp getService(){
-//        if(service == null) service = new ShipmentServiceImp();
-//        return service;
-//    }
-//
-//    @Override
-//    public Set<Shipment> getAll() {
-//        return this.repo.getAll();
-//    }
-//
-//    @Override
-//    public Shipment create(Shipment shipment) {
-//        return this.repo.create(shipment);
-//    }
-//
-//    @Override
-//    public Shipment update(Shipment shipment) {
-//        return this.repo.update(shipment);
-//    }
-//
-//    @Override
-//    public void delete(String id) {
-//    this.repo.delete(id);
-//    }
-//
-//    @Override
-//    public Shipment read(String id) {
-//        return this.repo.read(id);
-//    }
-//}
+package ac.ca.cput.service.admin.impl;
+
+import ac.ca.cput.Repository.admin.PharmacyRepository;
+import ac.ca.cput.Repository.admin.ShipmentRepository;
+import ac.ca.cput.Repository.admin.impl.PharmacyRepositoryImp;
+import ac.ca.cput.Repository.people.CustomerRepository;
+import ac.ca.cput.Repository.people.PharmacyClerkRepository;
+import ac.ca.cput.Repository.people.impl.CustomerRepositoryImp;
+import ac.ca.cput.Repository.people.impl.PharmacyClerkRepositoryImp;
+import ac.ca.cput.Repository.people.impl.ShipmentRepositoryImp;
+import ac.ca.cput.model.admin.Pharmacy;
+import ac.ca.cput.model.admin.Shipment;
+import ac.ca.cput.model.people.Customer;
+import ac.ca.cput.model.people.PharmacyClerk;
+import ac.ca.cput.service.admin.PharmacyService;
+import ac.ca.cput.service.admin.ShipmentService;
+import ac.ca.cput.service.people.CustomerService;
+import ac.ca.cput.service.people.PharmacyClerkService;
+import org.springframework.stereotype.Repository;
+
+import java.util.Set;
+
+@Repository("ShipmentServiceImp")
+public class ShipmentServiceImp implements ShipmentService {
+
+    private ShipmentServiceImp service = null;
+    private ShipmentRepository repository;
+
+    public ShipmentServiceImp() {
+        repository = ShipmentRepositoryImp.getRepo();
+    }
+
+    public ShipmentServiceImp getService(){
+
+        if(service == null){
+            return new ShipmentServiceImp();
+        }
+        return service;
+    }
+
+    @Override
+    public Set<Shipment> getAll() {
+        return this.repository.getAll();
+    }
+
+    @Override
+    public Shipment create(Shipment shipment) {
+        return repository.create(shipment);
+    }
+
+    @Override
+    public Shipment read(String integer) {
+        return repository.read(integer);
+    }
+
+    @Override
+    public Shipment update(Shipment shipment) {
+        return repository.update(shipment);
+    }
+
+    @Override
+    public void delete(String integer) {
+
+        repository.delete(integer);
+    }
+}

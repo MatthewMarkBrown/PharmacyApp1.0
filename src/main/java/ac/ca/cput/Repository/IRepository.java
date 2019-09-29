@@ -1,8 +1,8 @@
 package ac.ca.cput.Repository;
 
-public interface IRepository<T,TD> {
+public interface IRepository<T,ID> {
 T create (T t);
 T update (T t);
-void delete (String t);
+void delete (ID id);
 T read(String id);
 }

@@ -1,11 +1,11 @@
 package ac.ca.cput.service;
 
-public interface IService <T,TD>{
+public interface IService <T,ID>{
     T create(T type);
 
     T update(T type);
 
-    void delete(String id);
+    void delete(ID id);
 
     T read(String id);
 }

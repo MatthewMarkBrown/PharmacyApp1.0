@@ -1,48 +1,58 @@
 package ac.ca.cput.service.people.impl;
 
+import ac.ca.cput.Repository.people.CustomerRepository;
 import ac.ca.cput.Repository.people.SupplierRepository;
+import ac.ca.cput.Repository.people.impl.CustomerRepositoryImp;
 import ac.ca.cput.Repository.people.impl.SupplierRepositoryImp;
+import ac.ca.cput.model.people.Customer;
 import ac.ca.cput.model.people.Supplier;
+import ac.ca.cput.service.people.CustomerService;
 import ac.ca.cput.service.people.SupplierService;
+import org.springframework.stereotype.Repository;
 
 import java.util.Set;
 
+@Repository("SupplierServiceImp")
 public class SupplierServiceImp implements SupplierService {
-    private static SupplierServiceImp service = null;
-    private SupplierRepository repo;
 
-    private SupplierServiceImp() {
-        this.repo = (SupplierRepository) SupplierRepositoryImp.getRepo();
+    private SupplierServiceImp service = null;
+    private SupplierRepository repository;
+
+    public SupplierServiceImp() {
+        repository = SupplierRepositoryImp.getRepo();
     }
 
-    public static SupplierServiceImp getService(){
-        if(service == null) service = new SupplierServiceImp();
+    public SupplierServiceImp getService(){
+
+        if(service == null){
+            return new SupplierServiceImp();
+        }
         return service;
     }
 
-
     @Override
     public Set<Supplier> getAll() {
-        return this.repo.getAll();
+        return this.repository.getAll();
     }
 
     @Override
     public Supplier create(Supplier supplier) {
-        return this.repo.create(supplier);
+        return repository.create(supplier);
+    }
+
+    @Override
+    public Supplier read(String integer) {
+        return repository.read(integer);
     }
 
     @Override
     public Supplier update(Supplier supplier) {
-        return this.repo.update(supplier);
+        return repository.update(supplier);
     }
 
     @Override
-    public void delete(String id) {
-    this.repo.delete(id);
-    }
+    public void delete(String integer) {
 
-    @Override
-    public Supplier read(String id) {
-        return this.repo.read(id);
+        repository.delete(integer);
     }
 }
