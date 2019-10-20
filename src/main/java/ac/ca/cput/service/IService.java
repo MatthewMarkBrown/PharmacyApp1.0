@@ -7,5 +7,5 @@ public interface IService <T,ID>{
 
     void delete(ID id);
 
-    T read(String id);
+    T read(T id);
 }
